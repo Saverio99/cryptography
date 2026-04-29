@@ -1,0 +1,16 @@
+{
+  "name": "cryptography",
+  "version": "1.0.0",
+  "description": "A sample project for crypting with AES-256-GCM",
+  "license": "ISC",
+  "author": "Saverio Curcio",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1"
+  }
+}
