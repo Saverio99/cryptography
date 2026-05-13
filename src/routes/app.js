@@ -1,35 +1,51 @@
-const express = require('express');
-const {encrypt} = require('../crypt/cryptography');
-const {storeEncryptedMessage, getEncryptedMessage}  = require('../store/store');
+const express = require("express");
+const { encrypt } = require("../crypt/cryptography");
+const {
+  storeEncryptedMessage,
+  getEncryptedMessage,
+} = require("../store/store");
+const { generateQRCodeSVG } = require("../../../medical-qrcode/src");
 const app = express();
 const port = 8080;
 
 app.use(express.json());
 
-// define route for encryption
-app.post('/encrypt', (req, res) => {
-    try {
-        const encryptedMessage = encrypt(req.body.text);
-        // const encryptedMessage = "Prova";
-        const id = storeEncryptedMessage(encryptedMessage);
-        res.status(200).json({ message: "We are encrypted your message. The id for this message is: ", id});
-
-    } catch (error) {
-        res.status(404).json({ message: "We have encounter an error", error: error.message });
+app.post("/encrypt", async (req, res) => {
+  try {
+    if (!req.body || Object.keys(req.body).length === 0) {
+      return res.status(400).json({ error: "Void body" });
     }
-})
 
-// define route for decryption
-app.get('/decrypt/:id', (req, res) => {
-    try {
-        decryptedMessage = getEncryptedMessage(req.params.id);
-        res.status(200).json({ decrypted: decryptedMessage })
-    } catch (error) {
-        res.status(404).json({ message: "We have encounter an error", error: error.message });
-    }
-})
+    const encryptedMessage = encrypt(JSON.stringify(req.body));
+    const id = storeEncryptedMessage(encryptedMessage);
+    const qrCode = await generateQRCodeSVG(id);
 
-// start the server
+    res
+      .status(200)
+      .json({
+        result:
+          "We are encrypted your message in the following QRCode: " + qrCode,
+      });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "We have encountered an error", error: error.message });
+  }
+});
+
+app.get("/decrypt/:id", (req, res) => {
+  try {
+    const decryptedMessage = getEncryptedMessage(req.params.id);
+    const json = JSON.parse(decryptedMessage);
+
+    res.status(200).json({ result: json });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "We have encountered an error", error: error.message });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
