@@ -11,7 +11,7 @@ const IV_LENGTH = 12; // inizialization vector
 /**
  * Encrypt the input text.
  *
- * @param {text} text - The text you want encrypt.
+ * @param {text} text The text you want encrypt.
  * @returns {Object} An object representing the iv (Inizialization Vector), the tag and the content of the encrypted text.
  */
 function encrypt(text) {
@@ -35,7 +35,7 @@ function encrypt(text) {
 /**
  * Dencrypt the input text.
  *
- * @param {text} text - The text you want decrypt.
+ * @param {text} text The text you want decrypt.
  * @returns {Object} The decrypted text.
  */
 function decrypt(data) {
