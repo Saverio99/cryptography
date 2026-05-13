@@ -4,5 +4,5 @@ node_modules/
 # important! ignore .env file
 .env
 
-# my workspace  file
-cryptography.code-workspace
+# nodemon config file
+nodemon.json
