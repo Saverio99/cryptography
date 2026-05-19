@@ -4,7 +4,6 @@ const {
   storeEncryptedMessage,
   getEncryptedMessage,
 } = require("../store/store");
-const { generateQRCodeSVG } = require("../../../medical-qrcode/src");
 const app = express();
 const port = 8080;
 
@@ -18,13 +17,12 @@ app.post("/encrypt", async (req, res) => {
 
     const encryptedMessage = encrypt(JSON.stringify(req.body));
     const id = storeEncryptedMessage(encryptedMessage);
-    const qrCode = await generateQRCodeSVG(id);
 
     res
       .status(200)
       .json({
         result:
-          "We are encrypted your message in the following QRCode: " + qrCode,
+          "We are encrypted your message, this is the ID: " + id,
       });
   } catch (error) {
     res
